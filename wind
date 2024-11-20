@@ -1,15 +1,17 @@
 -- Serviços
 local UserInputService = game:GetService("UserInputService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 -- Variável para controlar se o espaço está sendo segurado
 local holdingSpace = false
 
--- Função para simular pressionar a tecla ESPAÇO
-local function pressSpace()
+-- Função para simular pressionar espaço continuamente
+local function pressSpaceContinuously()
     while holdingSpace do
-        keypress(0x20) -- Código da tecla ESPAÇO em formato hexadecimal
+        -- Simula pressionar a tecla ESPAÇO
+        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, game) -- Pressiona espaço
         task.wait(0.1) -- Intervalo entre os pressionamentos
-        keyrelease(0x20) -- Solta a tecla ESPAÇO
+        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, game) -- Solta espaço
         task.wait(0.1) -- Ajuste conforme necessário
     end
 end
@@ -19,7 +21,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == Enum.KeyCode.Space and not gameProcessed then
         if not holdingSpace then
             holdingSpace = true
-            pressSpace()
+            pressSpaceContinuously()
         end
     end
 end)
