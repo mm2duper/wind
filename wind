@@ -5,6 +5,7 @@ local RunService = game:GetService("RunService")
 
 local Humanoid = nil
 local AutoJumping = false
+local JumpDelay = 0.2 -- Delay entre os pulos (ajustável para melhor desempenho)
 
 -- Função para configurar o Humanoid
 local function SetupCharacter()
@@ -19,11 +20,14 @@ Player.CharacterAdded:Connect(SetupCharacter)
 -- Função para pulo automático
 local function StartAutoJump()
     AutoJumping = true
-    RunService.RenderStepped:Connect(function()
-        if AutoJumping and Humanoid and Humanoid:GetState() == Enum.HumanoidStateType.Landed then
+    while AutoJumping do
+        if Humanoid and Humanoid:GetState() == Enum.HumanoidStateType.Landed then
             Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            wait(JumpDelay) -- Delay entre cada pulo
+        else
+            wait(0.1) -- Pequeno tempo de espera se não estiver no estado "Landed"
         end
-    end)
+    end
 end
 
 -- Função para parar o pulo automático
